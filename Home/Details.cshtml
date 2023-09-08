@@ -1,0 +1,99 @@
+﻿@using WebMatrix.Data
+
+@{
+    var id = Request.QueryString["id"];
+
+    var db = Database.Open("FoodDB");
+
+    var sql = "SELECT * FROM orders AS O JOIN deliveries AS Dil ON O.order_id = Dil.order_id " +
+        "JOIN driver AS D ON Dil.delivery_id = D.delivery_id JOIN payment AS P ON O.order_id = P.order_id" +
+        "JOIN channels AS C ON O.channel_id = C.channel_id";
+
+    var output = db.Query(sql, id);
+}
+
+if (IsPost && Request.Form["delete"] != null)
+
+{
+    var deleteQueryString = "Delete FROM Items WHERE itemID = @0";
+    //db.QuerySingle(deleteQueryString, Request.Form["delete"]);
+    try
+    {
+    db.QuerySingle(deleteQueryString, Request.Form["delete"]);
+    <div>successful</div>
+    }
+    catch
+    {
+    <div>Fail</div> ;
+    }
+    }
+    @*else
+
+        {
+            <p>test</p>
+        }*@
+    var data = db.Query(selectQueryString, Request.Form["searchText"]);
+
+    <div class="jumbotron pt-1 pb-1 mt-2">
+        <h2 class="text-center">Order Detail</h2>
+    </div>
+
+    @if (output != null)
+
+    {
+        <div class="row justify-content-center ">
+            <div class="col-8">
+                <div class=" =card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">@output.driver_id</h5>
+                        <p>DriverID:@output.driver_id</p>
+                        <p>DriverModal:@output.driver_modal</p>
+                        <p>DriverTyoe:@output.driver_type</p>
+                        <p>OrderID:@output.order_id</p>
+                        <p>StoreID:@output.store_id</p>
+                        <p>ChannelID:@output.channel_id</p>
+                        <p>Status:@output.order_status</p>
+                        <p>Amount:@output.order_amount</p>
+                        <p>DeliveryFee:@output.order_delivery_fee</p>
+                        <p>DeliveryCost:@output.order_delivery_cost</p>
+                        <p>MomentCreated:@output.order_moment_created</p>
+                        <p>MomentAccepted:@output.order_moment_accepted</p>
+                        <p>MomentReady:@output.order_moment_ready</p>
+                        <p>MomentCollected:@output.order_moment_collected</p>
+                        <p>MomentInEXpedition:@output.order_moment_in_expedition</p>
+                        <p>MomentDelivering:@output.order_moment_delivering</p>
+                        <p>MomentDelivered:@output.order_moment_delivered</p>
+                        <p>MomentFinished:@output.order_moment_finished</p>
+                        <p>MetircCollectedTime:@output.order_metric_collected_time</p>
+                        <p>MetricPausedTime:@output.order_metric_paused_time</p>
+                        <p>MetricProductionTime:@output.order_metric_production_time</p>
+                        <p>MetircWalkingTime:@output.order_metric_walking_time</p>
+                        <p>MetricExpeditonSpeedTime:@output.order_metric_expediton_speed_time</p>
+                        <p>MetircTransitTime:@output.order_metric_transit_time</p>
+                        <p>MetricCycleTime:@output.order_metric_cycle_time</p>
+
+                        @if (output.payment_id != null)
+                        {
+                            <p>ChannelID:@output.channel_id</p>
+                            <p>ChannelName:@output.channel_name</p>
+                            <p>ChannelType:@output.channel_type</p>
+                            <p>PaymentID:@output.payment_id</p>
+                            <p>PaymentOrderID:@output.payment_order_id</p>
+                            <p>PaymentAmount:@output.payment_amount</p>
+                            <p>PaymentFee:@output.payment_fee</p>
+                            <p>PaymentMethod:@output.payment_method</p>
+                        }
+
+                    </div>
+                    <a class="btn btn-outline-primary" href="http://localhost:44399/Management/Edit" role="button" data-toggle="tooltip" data-placement="left" title="Edit">Edit</a>
+                    <button type="submit" name="delete" class="btn btn-outline-danger" value="@row.itemID">Delete</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    else
+    {
+        <h2 class="card=text-center text-danger">Ooops - That Order Detail was not found!</h2>
+    }
+

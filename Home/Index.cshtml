@@ -1,0 +1,66 @@
+﻿@using WebMatrix.Data
+@{
+    var db = Database.Open("FoodDB");
+
+    var sql = "SELECT * FROM orders WHERE order_status LIKE CONCAT (@0,'%')";
+
+    var output = db.Query(sql, Request.Form["searchText"]);
+}
+
+
+<div class="jumbotron pt-1 pb-1 mt-2">
+    <h2>Order</h2>
+</div>
+
+<form method="post" action="Home/Index" class="row">
+    <div class="col-3 justify-content-center">
+        <input type="text" name="searchText" placeholder="searchOrder">
+        <button type="submit" class="btn btn-secondary">search</button>
+    </div>
+
+
+    @if (output.Count() > 0)
+    {
+        <div class=" row justify-content-center"></div>
+    }
+    else
+    {
+        <h2 class="text-danger ">Oops! No matching order returned!</h2>
+    }
+    <table class="table">
+        <thead class="table table-striped">
+            <tr>
+                <th scope="col">OrderID #</th>
+                <th scope="col">OrderStatus</th>
+                <th scope="col">OrderAmount</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in output)
+            {
+                <tr>
+                    <th scope="row">@row.order_id</th>
+                    <td>@row.order_status</td>
+                    <td>@row.order_amount.ToString("C")</td>
+                    <td><a herf="/Home/Details?id=@row.order_id" class="btn btn-secondary" target="_blank">View Detail</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h2>Channels</h2>
+    <div>
+        @foreach (var n in output)
+        {
+            var channels = db.Query("SELECT * FROM channels WHERE channel_name = @0", n.channel_name);
+            <li>
+                Channels for OrderID @n.order_id>
+                @foreach (var row in channels)
+                {
+                <li>@row.channel_name</li>
+            }
+                </li>
+         }
+    </div>
+</form>
