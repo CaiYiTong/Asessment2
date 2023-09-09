@@ -1,1 +1,73 @@
-﻿<h2>Payment Analysis</h2>
+﻿@using WebMatrix.Data
+
+@{
+    var id = Request.QueryString["id"];
+
+    var db = Database.Open("FoodDB");
+
+    var sql = "SELECT * from orders AS O JOIN stores AS S ON O.store_id = S.store_id " +
+                "JOIN payments AS P ON P.payment_order_id = O.order_id" +
+                "JOIN channels AS C ON C.channel_id = O.channel_id";
+
+    var output = db.QuerySingle(sql, id);
+}
+
+<div class="jumbotron pt-1pt-1 mt-2">
+    <h2 class="text-center">Payment Analysis</h2>
+</div>
+
+@if (output != null)
+{
+    <div class="row justify-content-center ">
+        <div class="col-8">
+            <div class=" =card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">@output.driver_id</h5>
+                    <p>DriverID:@output.dirver_id</p>
+                    <p>DriverModal:@output.driver_modal</p>
+                    <p>DriverTyoe:@output.driver_type</p>
+                    <p>OrderID:@output.order_id</p>
+                    <p>StoreID:@output.store_id</p>
+                    <p>ChannelID:@output.channel_id</p>
+                    <p>Status:@output.order_status</p>
+                    <p>Amount:@output.order_amount</p>
+                    <p>DeliveryFee:@output.order_delivery_fee</p>
+                    <p>DeliveryCost:@output.order_delivery_cost</p>
+                    <p>MomentCreated:@output.order_moment_created</p>
+                    <p>MomentAccepted:@output.order_moment_accepted</p>
+                    <p>MomentReady:@output.order_moment_ready</p>
+                    <p>MomentCollected:@output.order_moment_collected</p>
+                    <p>MomentInEXpedition:@output.order_moment_in_expedition</p>
+                    <p>MomentDelivering:@output.order_moment_delivering</p>
+                    <p>MomentDelivered:@output.order_moment_delivered</p>
+                    <p>MomentFinished:@output.order_moment_finished</p>                        
+                    <p>MetircCollectedTime:@output.order_metric_collected_time</p>
+                    <p>MetricPausedTime:@output.order_metric_paused_time</p>
+                    <p>MetricProductionTime:@output.order_metric_production_time</p>
+                    <p>MetircWalkingTime:@output.order_metric_walking_time</p>
+                    <p>MetricExpeditonSpeedTime:@output.order_metric_expediton_speed_time</p>
+                    <p>MetircTransitTime:@output.order_metric_transit_time</p>
+                    <p>MetricCycleTime:@output.order_metric_cycle_time</p>
+
+                    @if (output.payment_id != null)
+                    {
+                        <p>ChannelID:@output.channel_id</p>
+                        <p>ChannelName:@output.channel_name</p>
+                        <p>ChannelType:@output.channel_type</p>
+                        <p>PaymentID:@output.payment_id</p>
+                        <p>PaymentOrderID:@output.payment_order_id</p>
+                        <p>PaymentAmount:@output.payment_amount</p>
+                        <p>PaymentFee:@output.payment_fee</p>
+                        <p>PaymentMethod:@output.payment_method</p>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+else
+{
+    <h2 class="card=text-center text-danger">Ooops - That Order Detail was not found!</h2>
+}

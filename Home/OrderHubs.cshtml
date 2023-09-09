@@ -1,2 +1,56 @@
-﻿
-<h2>Hob Orders Report</h2>
+﻿@using WebMatrix.Data
+
+@{
+    var id = Request.QueryString["id"];
+
+    var db = Database.Open("FoodDB");
+
+    var sql = "SELECT * FROM orders AS O JOIN stores AS S ON O.store_id = S.store_id " +
+    "JOIN hubs AS H ON S.hub_id = H.hub_id";
+
+    if (IsPost && Request.Form["delete"] != null)
+    {
+        var deleteQueryString = "Delete FROM Items WHERE itemID = @0";
+        try
+        {
+            db.QuerySingle(deleteQueryString, Request.Form["delete"]);
+            <div>successful</div>
+        }
+        catch
+        {
+            <div>Fail</div>;
+        }
+    }
+    var FDdata = db.Query(sql,id);
+}
+
+<div class="jumbotron pt-1pt-1 mt-2">
+    <h2 class="text-center">Hub Orders Report</h2>
+</div>
+
+<hr />
+<table class="table">
+    <tr>
+        <th scope="col">Order ID</th>
+        <th>OrderStatus</th>
+        <th>HubName</th>
+        <th>HubId</th>
+        <th>OrderAmount</th>
+        <th>Action</th>
+    </tr>
+    <tbody>
+        @foreach (var output in FDdata)
+        {
+            <tr>
+                <td>@output.order_id</td>
+                <td>@output.order_status</td>
+                <td>@output.hub_name</td>
+                <td>@output.hub_id</td>
+                <td>@output.order_amount.ToString("C")</td>
+                <td>
+                    <a href=" " class="btn btn-secondary" target="_blank">View Detail</a>
+                </td>
+            </tr>
+        }
+</table>
+

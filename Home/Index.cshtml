@@ -14,7 +14,7 @@
 
 <form method="post" action="Home/Index" class="row">
     <div class="col-3 justify-content-center">
-        <input type="text" name="searchText" placeholder="searchOrder">
+        <input type="text" name="searchText" placeholder="searchOrder" >
         <button type="submit" class="btn btn-secondary">search</button>
     </div>
 
@@ -53,7 +53,7 @@
     <div>
         @foreach (var n in output)
         {
-            var channels = db.Query("SELECT * FROM channels WHERE channel_name = @0", n.channel_name);
+            var channels = db.Query("SELECT * FROM channels WHERE channel_id = @0", n.channel_id);
             <li>
                 Channels for OrderID @n.order_id>
                 @foreach (var row in channels)
