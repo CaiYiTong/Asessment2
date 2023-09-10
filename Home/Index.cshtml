@@ -1,23 +1,28 @@
 ﻿@using WebMatrix.Data
 @{
+    var id = Request.QueryString["id"];
+
     var db = Database.Open("FoodDB");
 
     var sql = "SELECT * FROM orders WHERE order_status LIKE CONCAT (@0,'%')";
 
-    var output = db.Query(sql, Request.Form["searchText"]);
+    var output = db.Query(sql, id, Request.Form["searchText"]);
 }
+
 
 
 <div class="jumbotron pt-1 pb-1 mt-2">
     <h2>Order</h2>
 </div>
 
+<body style="background-color:floralwhite"></body>
+
+
 <form method="post" action="Home/Index" class="row">
     <div class="col-3 justify-content-center">
-        <input type="text" name="searchText" placeholder="searchOrder" >
+        <input type="text" name="searchText" placeholder="searchOrder">
         <button type="submit" class="btn btn-secondary">search</button>
     </div>
-
 
     @if (output.Count() > 0)
     {
@@ -33,10 +38,11 @@
                 <th scope="col">OrderID #</th>
                 <th scope="col">OrderStatus</th>
                 <th scope="col">OrderAmount</th>
-                <th scope="col"></th>
+                <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
+
             @foreach (var row in output)
             {
                 <tr>
@@ -61,6 +67,8 @@
                 <li>@row.channel_name</li>
             }
                 </li>
-         }
+            }
     </div>
 </form>
+
+

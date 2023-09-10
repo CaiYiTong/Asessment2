@@ -6,15 +6,16 @@
     var db = Database.Open("FoodDB");
 
     var sql = "SELECT * FROM orders AS O JOIN deliveries AS Dil ON O.order_id = Dil.delivery_order_id " +
-        "JOIN drivers AS D ON Dil.driver_id = D.driver_id " +
-        "JOIN payments AS P ON O.order_id = P.payment_order_id" +
-        "JOIN channels AS C ON O.channel_id = C.channel_id";
+        "JOIN drivers AS D ON Dil.driver_id = D.driver_id "+
+        "JOIN payments AS P ON O.order_id = P.payment_order_id"
+        /*+"JOIN channels AS C ON O.channel_id = C.channel_id" */;
 
-    var output = db.QuerySingle(sql, id);
+
+
 
     if (IsPost && Request.Form["delete"] != null)
     {
-        var deleteQueryString = "Delete FROM Items WHERE itemID = @0";
+        var deleteQueryString = "Delete FROM orders WHERE order_id = @0";
         try
         {
             db.QuerySingle(deleteQueryString, Request.Form["delete"]);
@@ -25,6 +26,7 @@
             <div>Fail</div>;
         }
     }
+    var output = db.QuerySingle(sql, id);
 }
 
 
@@ -33,6 +35,7 @@
     <h2 class="text-center">Order Detail</h2>
 </div>
 
+<body style="background-color:floralwhite"></body>
 
 @if (output != null)
 {
@@ -41,7 +44,7 @@
             <div class=" =card mb-3">
                 <div class="card-body">
                     <h5 class="card-title">@output.driver_id</h5>
-                    <p>DriverID:@output.dirver_id</p>
+                    <p>DriverID:@output.driver_id</p>
                     <p>DriverModal:@output.driver_modal</p>
                     <p>DriverTyoe:@output.driver_type</p>
                     <p>OrderID:@output.order_id</p>
@@ -58,7 +61,7 @@
                     <p>MomentInEXpedition:@output.order_moment_in_expedition</p>
                     <p>MomentDelivering:@output.order_moment_delivering</p>
                     <p>MomentDelivered:@output.order_moment_delivered</p>
-                    <p>MomentFinished:@output.order_moment_finished</p>                        
+                    <p>MomentFinished:@output.order_moment_finished</p>
                     <p>MetircCollectedTime:@output.order_metric_collected_time</p>
                     <p>MetricPausedTime:@output.order_metric_paused_time</p>
                     <p>MetricProductionTime:@output.order_metric_production_time</p>
@@ -67,11 +70,12 @@
                     <p>MetircTransitTime:@output.order_metric_transit_time</p>
                     <p>MetricCycleTime:@output.order_metric_cycle_time</p>
 
+
                     @if (output.payment_id != null)
                     {
-                        <p>ChannelID:@output.channel_id</p>
+                        @*<p>ChannelID:@output.channel_id</p>
                         <p>ChannelName:@output.channel_name</p>
-                        <p>ChannelType:@output.channel_type</p>
+                        <p>ChannelType:@output.channel_type</p>*@
                         <p>PaymentID:@output.payment_id</p>
                         <p>PaymentOrderID:@output.payment_order_id</p>
                         <p>PaymentAmount:@output.payment_amount</p>
@@ -80,8 +84,7 @@
                     }
 
                 </div>
-                <a class="btn btn-outline-primary" href="http://localhost:44399/Management/Edit" role="button" data-toggle="tooltip" data-placement="left" title="Edit">Edit</a>
-                <button type="submit" name="delete" class="btn btn-outline-danger" value="output.itemID">Delete</button>
+                <button type="submit" name="delete" class="btn btn-danger" value="output.order_id">Delete</button>
             </div>
         </div>
     </div>

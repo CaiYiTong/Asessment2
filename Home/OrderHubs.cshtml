@@ -10,7 +10,7 @@
 
     if (IsPost && Request.Form["delete"] != null)
     {
-        var deleteQueryString = "Delete FROM Items WHERE itemID = @0";
+        var deleteQueryString = "Delete FROM orders WHERE order_id = @0";
         try
         {
             db.QuerySingle(deleteQueryString, Request.Form["delete"]);
@@ -27,6 +27,8 @@
 <div class="jumbotron pt-1pt-1 mt-2">
     <h2 class="text-center">Hub Orders Report</h2>
 </div>
+
+<body style="background-color:floralwhite"></body>
 
 <hr />
 <table class="table">
@@ -48,9 +50,10 @@
                 <td>@output.hub_id</td>
                 <td>@output.order_amount.ToString("C")</td>
                 <td>
-                    <a href=" " class="btn btn-secondary" target="_blank">View Detail</a>
+                    <a href=" " class="btn btn-danger" target="_blank">View Detail</a>
                 </td>
             </tr>
         }
+    </tbody>
 </table>
 
